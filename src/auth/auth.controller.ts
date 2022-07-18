@@ -13,8 +13,8 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Body() LoginDTO: UserDTO) {
-    const user = await this.userService.findByLogin(LoginDTO);
+  async login(@Body() loginDTO: UserDTO) {
+    const user = await this.userService.findByLogin(loginDTO);
     const token = await this.authService.signPayload({
       username: user.username,
     });
@@ -22,8 +22,8 @@ export class AuthController {
     return { token, username: user.username, id: user._id };
   }
   @Post('registration')
-  async register(@Body() RegisterDTO: UserDTO) {
-    const user = await this.userService.create(RegisterDTO);
+  async register(@Body() registerDTO: UserDTO) {
+    const user = await this.userService.create(registerDTO);
     const token = await this.authService.signPayload({
       username: user.username,
     });

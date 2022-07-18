@@ -15,31 +15,32 @@ export class UsersService {
   constructor(@InjectModel('User') private userModel: Model<IUser>) {}
 
   sanitizeUser(user: IUser) {
-    const { password, ...rest } = user.toObject();
+    console.log('user', user)
+    const { password, ...rest } = user;
     return rest;
   }
 
-  async create(RegisterDTO: UserDTO) {
-    const { username } = RegisterDTO;
+  async create(registerDTO: UserDTO) {
+    const { username } = registerDTO;
     const user = await this.userModel.findOne({ username });
     if (user) {
-      throw new HttpException('user already exists', HttpStatus.BAD_REQUEST);
+      throw new HttpException('user already exists', HttpStatus.CONFLICT);
     }
-    const createdUser = new this.userModel(RegisterDTO);
+    const createdUser = new this.userModel(registerDTO);
     await createdUser.save();
     return this.sanitizeUser(createdUser);
   }
 
-  async findByLogin(UserDTO: UserDTO) {
-    const { username, password } = UserDTO;
+  async findByLogin(userDTO: UserDTO) {
+    const { username, password } = userDTO;
     const user = await this.userModel.findOne({ username });
     if (!user) {
-      throw new HttpException('user doesnt exists', HttpStatus.BAD_REQUEST);
+      throw new HttpException('user doesnt exists', HttpStatus.UNAUTHORIZED);
     }
     if (await bcrypt.compare(password, user.password)) {
       return this.sanitizeUser(user);
     } else {
-      throw new HttpException('invalid credential', HttpStatus.BAD_REQUEST);
+      throw new HttpException('invalid credential', HttpStatus.UNAUTHORIZED);
     }
   }
 
