@@ -15,7 +15,6 @@ export class UsersService {
   constructor(@InjectModel('User') private userModel: Model<IUser>) {}
 
   sanitizeUser(user: IUser) {
-    console.log('user', user)
     const { password, ...rest } = user;
     return rest;
   }
