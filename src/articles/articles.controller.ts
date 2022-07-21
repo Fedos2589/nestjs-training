@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { SearchParamsDto } from 'src/articles/dto/search-params.dto';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -26,17 +27,21 @@ export class ArticlesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.articlesService.findOne(+id);
+  findOne(@Param() searchParamsDto: SearchParamsDto) {
+    console.log(searchParamsDto);
+    return this.articlesService.findOne(searchParamsDto.id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto) {
-    return this.articlesService.update(id, updateArticleDto);
+  update(
+    @Param() searchParamsDto: SearchParamsDto,
+    @Body() updateArticleDto: UpdateArticleDto,
+  ) {
+    return this.articlesService.update(searchParamsDto.id, updateArticleDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.articlesService.remove(id);
+  remove(@Param() searchParamsDto: SearchParamsDto) {
+    return this.articlesService.remove(searchParamsDto.id);
   }
 }

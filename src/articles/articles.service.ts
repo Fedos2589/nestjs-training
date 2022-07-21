@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -19,18 +19,33 @@ export class ArticlesService {
     return this.articleModel.find();
   }
 
-  async findOne(id: number) {
-    return this.articleModel.findOne({ id });
+  async findOne(id: string) {
+    const article = await this.articleModel.findOne({ _id: id });
+    if (!article) {
+      throw new HttpException('article not exists', HttpStatus.NOT_FOUND);
+    } else {
+      return article;
+    }
   }
 
   async update(id: string, updateArticleDto: UpdateArticleDto) {
-    return this.articleModel.findByIdAndUpdate(
-      { _id: id },
-      { $set: updateArticleDto },
-    );
+    const article = await this.articleModel.findOne({ _id: id });
+    if (!article) {
+      throw new HttpException('article not exists', HttpStatus.NOT_FOUND);
+    } else {
+      return this.articleModel.findByIdAndUpdate(
+        { _id: id },
+        { $set: updateArticleDto },
+      );
+    }
   }
 
   async remove(id: string) {
-    return this.articleModel.deleteOne({ _id: id });
+    const article = await this.articleModel.findOne({ _id: id });
+    if (!article) {
+      throw new HttpException('article not exists', HttpStatus.NOT_FOUND);
+    } else {
+      return this.articleModel.deleteOne({ _id: id });
+    }
   }
 }
