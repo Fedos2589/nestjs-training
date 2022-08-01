@@ -40,6 +40,11 @@ payload:
   "password": "newuser123"
 }
 
+# users list get
+/users
+method: GET
+ADMIN only
+
 # articles new
 /articles
 method: POST
