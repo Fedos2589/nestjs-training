@@ -41,7 +41,7 @@ payload:
 }
 
 # users list get
-/users
+/auth/users
 method: GET
 ADMIN only
 
