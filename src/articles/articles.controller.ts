@@ -28,7 +28,6 @@ export class ArticlesController {
 
   @Get(':id')
   findOne(@Param() searchParamsDto: SearchParamsDto) {
-    console.log(searchParamsDto);
     return this.articlesService.findOne(searchParamsDto.id);
   }
 
